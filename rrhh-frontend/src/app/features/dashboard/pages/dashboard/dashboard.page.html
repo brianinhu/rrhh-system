@@ -1,0 +1,123 @@
+@if (data(); as d) {
+<div>
+    <mat-toolbar>
+        <mat-icon>dashboard</mat-icon>
+        <span>Panel de Gestión</span>
+    </mat-toolbar>
+
+    <br />
+
+    <mat-card appearance="outlined">
+        <mat-card-header>
+            <mat-card-title>Resumen General</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-list>
+                <mat-list-item>
+                    <mat-icon matListItemIcon>people</mat-icon>
+                    <span matListItemTitle>Total en Nómina</span>
+                    <span matListItemLine>{{ d.totalEmpleadosActivos }}</span>
+                </mat-list-item>
+                <mat-list-item>
+                    <mat-icon matListItemIcon>rocket_launch</mat-icon>
+                    <span matListItemTitle>Proyectos Activos</span>
+                    <span matListItemLine>{{ totalProyectosActivos(d.proyectosStatus) }}</span>
+                </mat-list-item>
+            </mat-list>
+        </mat-card-content>
+    </mat-card>
+
+    <br />
+    <mat-divider></mat-divider>
+    <br />
+
+    <mat-grid-list cols="3" rowHeight="420px" gutterSize="16px">
+        <mat-grid-tile>
+            <mat-card appearance="outlined">
+                <mat-card-header>
+                    <mat-icon>pie_chart</mat-icon>
+                    <mat-card-title>Distribución por Departamento</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <ngx-charts-pie-chart [scheme]="colorScheme" [results]="mapToChart(d.distribucionDepartamento)"
+                        [doughnut]="true" [legend]="false" [labels]="true" [view]="[360, 240]">
+                    </ngx-charts-pie-chart>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+
+        <mat-grid-tile>
+            <mat-card appearance="outlined">
+                <mat-card-header>
+                    <mat-icon>bar_chart</mat-icon>
+                    <mat-card-title>Distribución por Cargo</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <ngx-charts-bar-horizontal [scheme]="colorScheme" [results]="mapToChart(d.distribucionCargo)"
+                        [xAxis]="true" [yAxis]="true" [view]="[360, 240]">
+                    </ngx-charts-bar-horizontal>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+
+        <mat-grid-tile>
+            <mat-card appearance="outlined">
+                <mat-card-header>
+                    <mat-icon>assignment</mat-icon>
+                    <mat-card-title>Estatus de Proyectos</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <ngx-charts-advanced-pie-chart [scheme]="colorScheme" [results]="mapToChart(d.proyectosStatus)"
+                        [view]="[360, 240]">
+                    </ngx-charts-advanced-pie-chart>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+    </mat-grid-list>
+
+    <br />
+    <mat-divider></mat-divider>
+    <br />
+
+    <mat-card appearance="outlined">
+        <mat-card-header>
+            <mat-icon>history</mat-icon>
+            <mat-card-title>Últimos Ingresos</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-list>
+                @for (emp of d.ultimosEmpleados; track emp.nombreCompleto) {
+                <mat-list-item>
+                    <span matListItemTitle>{{ emp.nombreCompleto }}</span>
+                    <span matListItemLine>{{ emp.departamento }} · {{ emp.fechaIngreso | date:'mediumDate' }}</span>
+                </mat-list-item>
+                }
+            </mat-list>
+        </mat-card-content>
+    </mat-card>
+
+    <br />
+
+    <mat-card appearance="outlined">
+        <mat-card-header>
+            <mat-icon>workspace_premium</mat-icon>
+            <mat-card-title>Top 5 Sueldos</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-list>
+                @for (top of d.topSueldos; track top.nombreCompleto) {
+                <mat-list-item>
+                    <span matListItemTitle>{{ top.nombreCompleto }}</span>
+                    <span matListItemLine>{{ top.cargo }} · S/. {{ top.sueldo | number:'1.0-0' }}</span>
+                </mat-list-item>
+                }
+            </mat-list>
+        </mat-card-content>
+    </mat-card>
+
+</div>
+} @else {
+<div>
+    <mat-spinner diameter="40"></mat-spinner>
+</div>
+}

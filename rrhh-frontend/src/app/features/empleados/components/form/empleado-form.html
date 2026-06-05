@@ -1,0 +1,98 @@
+<h2 mat-dialog-title class="text-xl font-semibold text-slate-800 tracking-tight pb-2 border-b border-slate-100">
+  {{ data.empleado ? 'Editar información' : 'Nuevo registro de empleado' }}
+</h2>
+
+<mat-dialog-content class="mt-4">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 py-2">
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Nombre</mat-label>
+      <input matInput [(ngModel)]="nuevoEmpleado.nombre" name="nombre" autofocus required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Apellido</mat-label>
+      <input matInput [(ngModel)]="nuevoEmpleado.apellido" name="apellido" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Cargo</mat-label>
+      <mat-select [(ngModel)]="nuevoEmpleado.cargo" [compareWith]="compareFn" name="cargo" required>
+        @for (item of cargos; track item.id) {
+        <mat-option [value]="item">{{ item.nombre }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full" floatLabel="always">
+      <mat-label>Sueldo mensual</mat-label>
+      <span matTextPrefix>S/&nbsp;</span>
+      <input matInput type="number" [(ngModel)]="nuevoEmpleado.sueldo" name="sueldo">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full md:col-span-2">
+      <mat-label>Departamento</mat-label>
+      <mat-select [(ngModel)]="nuevoEmpleado.departamento" [compareWith]="compareFn" name="departamento" required>
+        @for (dep of departamentos; track dep.id) {
+        <mat-option [value]="dep">{{ dep.nombre }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full md:col-span-2">
+      <mat-label>Proyectos asignados</mat-label>
+      <mat-select [(ngModel)]="idsProyectosSeleccionados" name="proyectos" multiple>
+        @for (proyecto of proyectoService.proyectos(); track proyecto.id) {
+        <mat-option [value]="proyecto.id">{{ proyecto.nombre }}</mat-option>
+        }
+      </mat-select>
+      <mat-hint>Puedes seleccionar uno o varios proyectos</mat-hint>
+    </mat-form-field>
+
+    <hr class="md:col-span-2 border-slate-100 my-2">
+
+    <!-- 🚀 NUEVO: Sección de Currículum -->
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Nivel de Estudios</mat-label>
+      <input matInput [(ngModel)]="nivelEstudios" name="nivelEstudios" placeholder="Ej: Universitario">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Especialidad</mat-label>
+      <input matInput [(ngModel)]="especialidad" name="especialidad" placeholder="Ej: Ingeniería de Sistemas">
+    </mat-form-field>
+
+    <!-- 🚀 NUEVO: Selector de Archivo PDF -->
+    <div class="md:col-span-2 mt-2">
+      <div
+        class="flex items-center gap-4 p-4 border-2 border-dashed border-slate-200 rounded-lg hover:border-slate-300 transition-colors">
+        <button type="button" mat-stroked-button (click)="fileInput.click()">
+          <mat-icon>upload_file</mat-icon>
+          Seleccionar Archivo
+        </button>
+
+        <!-- Input oculto que se dispara con el botón de arriba -->
+        <input #fileInput type="file" (change)="onFileSelected($event)" accept="application/pdf" hidden>
+
+        <div class="flex flex-col">
+          <span class="text-sm font-medium text-slate-700">
+            {{ nombreArchivo || 'No hay archivo seleccionado' }}
+          </span>
+          <span class="text-xs text-slate-500">Solo se permiten archivos .pdf</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="gap-3 pb-4 px-6">
+  <button mat-button (click)="cancelar()">
+    Cancelar
+  </button>
+
+  <button matButton="filled" (click)="agregarEmpleado()">
+    <mat-icon class="text-sm">{{ data.empleado ? 'update' : 'add' }}</mat-icon>
+    {{ data.empleado ? 'Actualizar' : 'Guardar' }}
+  </button>
+</mat-dialog-actions>

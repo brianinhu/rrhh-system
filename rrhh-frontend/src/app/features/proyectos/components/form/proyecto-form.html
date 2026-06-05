@@ -1,0 +1,51 @@
+<h2 mat-dialog-title>
+  {{ data.proyecto ? 'Editar Proyecto' : 'Nuevo Proyecto' }}
+</h2>
+
+<mat-dialog-content>
+  <p>
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre del Proyecto</mat-label>
+      <input matInput [(ngModel)]="proyectoRequest.nombre" name="nombre" placeholder="Ej: Migración AWS" autofocus
+        required>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field appearance="outline">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput [(ngModel)]="proyectoRequest.descripcion" name="descripcion" rows="3"
+        placeholder="Detalles del proyecto..."></textarea>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field appearance="outline">
+      <mat-label>Estado</mat-label>
+      <mat-select [(ngModel)]="proyectoRequest.estado" name="estado" required>
+        @for (est of estados; track est) {
+        <mat-option [value]="est">{{ est }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field appearance="outline">
+      <mat-label>Asignar Equipo</mat-label>
+      <mat-select [(ngModel)]="proyectoRequest.idsEmpleados" name="empleados" multiple>
+        @for (emp of empleados(); track emp.id) {
+        <mat-option [value]="emp.id">{{ emp.nombre }} {{ emp.apellido }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="guardar()">
+    <mat-icon>{{ data.proyecto ? 'update' : 'add' }}</mat-icon>
+    {{ data.proyecto ? 'Actualizar' : 'Guardar' }}
+  </button>
+</mat-dialog-actions>

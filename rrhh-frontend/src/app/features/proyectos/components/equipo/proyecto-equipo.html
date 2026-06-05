@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Equipo asignado: {{ data.nombre }}</h2>
+
+<mat-dialog-content>
+  @if (data.nombresEmpleados && data.nombresEmpleados.length > 0) {
+  <ul>
+    @for (empleado of data.nombresEmpleados; track empleado) {
+    <li>{{ empleado }}</li>
+    }
+  </ul>
+  } @else {
+  <div>
+    <p>No hay colaboradores asignados a este proyecto.</p>
+  </div>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close color="primary">
+    Entendido
+  </button>
+</mat-dialog-actions>

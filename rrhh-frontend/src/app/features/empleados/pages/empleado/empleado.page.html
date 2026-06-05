@@ -1,0 +1,43 @@
+<header>
+    <h1 class="text-xl">Empleados</h1>
+</header>
+<main>
+    <section>
+        <mat-card>
+            <mat-card-header>Total Empleados</mat-card-header>
+            <mat-card-content>
+                <mat-card-title>{{ totalEmpleados() }}</mat-card-title>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card>
+            <mat-card-header>Nómina Total</mat-card-header>
+            <mat-card-content>
+                <mat-card-title>{{ totalNomina() | currency:'PEN':'S/ ' }}</mat-card-title>
+            </mat-card-content>
+        </mat-card>
+    </section>
+
+    <section>
+        <button mat-fab extended (click)="openDialog()" [disabled]="isBusy()">
+            <mat-icon>add</mat-icon>
+            Agregar Empleado
+        </button>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Buscar...</mat-label>
+            <input matInput [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" placeholder="Ej. Juan">
+            <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+    </section>
+
+    <section>
+        <app-empleado-table [empleados]="empleados()" (editarEmpleado)="edit($event)"
+            (eliminarEmpleado)="delete($event)" (verDetalle)="viewDetails($event)">
+        </app-empleado-table>
+
+        <mat-paginator [length]="totalElements()" [pageSize]="pageSize()" [pageSizeOptions]="[4, 8, 12]"
+            (page)="onPageChange($event)" aria-label="Seleccionar página">
+        </mat-paginator>
+    </section>
+</main>

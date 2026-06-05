@@ -1,0 +1,33 @@
+# Java / Maven
+target/
+*.jar
+*.war
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+.pnpm-store/
+
+# IDEs y OS
+.idea/
+.vscode/
+.DS_Store
+*.swp
+
+# Environment Secrets
+.env
+.env.*
+!.env.example
+*.pem
+
+# Local data and backups
+postgres_data/
+npm_data/
+npm_letsencrypt/
+proyecto.zip
+
+# Build Outputs
+/rrhh-frontend/dist/
+/rrhh-frontend/node_modules/
+/rrhh-backend/target/

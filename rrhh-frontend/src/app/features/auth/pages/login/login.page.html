@@ -1,0 +1,66 @@
+<div class="min-h-screen flex items-center justify-center">
+
+  <mat-card class="w-full max-w-md shadow-xl rounded-2xl overflow-hidden">
+
+    @if (isLoading()) {
+    <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+    }
+
+    <div class="p-8 text-center">
+
+      <h1 class="text-xl mb-2">Inicia Sesión</h1>
+
+      <form [formGroup]="loginForm" class="flex flex-col gap-4" (submit)="$event.preventDefault()">
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Correo Electrónico</mat-label>
+          <input matInput type="email" formControlName="email" placeholder="jdoe@ripley.com.pe">
+          <mat-icon matSuffix>email</mat-icon>
+
+          @if (emailError) {
+          <mat-error>{{ emailError }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Contraseña</mat-label>
+
+          <input matInput [type]="showPassword() ? 'text' : 'password'" formControlName="password"
+            placeholder="Tu contraseña">
+
+          <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()"
+            [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            [attr.aria-pressed]="showPassword()">
+
+            <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+
+          @if (passwordError) {
+          <mat-error>{{ passwordError }}</mat-error>
+          }
+        </mat-form-field>
+
+        @if (message()) {
+        <div [class]="alertConfig().class" class="flex items-center gap-2">
+          <mat-icon class="text-base">{{ alertConfig().icon }}</mat-icon>
+          <span>{{ message() }}</span>
+        </div>
+        }
+
+        <div class="mt-6 flex flex-col gap-3">
+          <button mat-flat-button (click)="login()" [disabled]="isLoading()">
+            {{ isLoading() ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+          </button>
+
+          <a routerLink="/recuperar-password" class="text-sm">
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
+
+      </form>
+
+    </div>
+
+  </mat-card>
+
+</div>

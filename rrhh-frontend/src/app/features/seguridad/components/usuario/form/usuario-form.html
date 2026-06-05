@@ -1,0 +1,78 @@
+<h2 mat-dialog-title>
+    {{ data ? 'Editar Usuario' : 'Nuevo Usuario' }}
+</h2>
+
+<mat-dialog-content>
+    @if (form) {
+    <form [formGroup]="form" id="usuario-form">
+        <mat-form-field appearance="outline">
+            <mat-label>Empleado</mat-label>
+            <mat-select formControlName="idEmpleado">
+                @for (emp of listaEmpleados(); track emp.id) {
+                <mat-option [value]="emp.id">
+                    {{ emp.nombre }} {{ emp.apellido }}
+                </mat-option>
+                } @empty {
+                <mat-option disabled>No hay empleados disponibles</mat-option>
+                }
+            </mat-select>
+            @if (form.get('idEmpleado')?.hasError('required') && form.get('idEmpleado')?.touched) {
+            <mat-error>
+                Seleccione un empleado.
+            </mat-error>
+            }
+            @if (form.get('idEmpleado')?.hasError('empleadoDuplicado')) {
+            <mat-error>
+                Este empleado <strong>ya tiene un usuario</strong> asignado.
+            </mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" type="email" placeholder="ejemplo@correo.com">
+            @if (form.get('email')?.invalid && form.get('email')?.touched) {
+            <mat-error>Ingrese un correo válido</mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput formControlName="password" type="password">
+            @if (!data && form.get('password')?.hasError('required') && form.get('password')?.touched) {
+            <mat-error>Ingrese una contraseña.</mat-error>
+            }
+            @if (!data && form.get('password')?.hasError('minlength') && form.get('password')?.touched) {
+            <mat-error>La contraseña debe tener al menos 6 caracteres.</mat-error>
+            }
+            @if (data) {
+            <mat-hint>Deje en blanco para no cambiar la contraseña</mat-hint>
+            }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Roles de Usuario</mat-label>
+            <mat-select formControlName="idsRoles" multiple>
+                @for (rol of rolesDisponibles; track rol.id) {
+                <mat-option [value]="rol.id">
+                    {{ rol.nombre }}
+                </mat-option>
+                }
+            </mat-select>
+            @if (form.get('idsRoles')?.hasError('required') && form.get('idsRoles')?.touched) {
+            <mat-error>Seleccione al menos un rol.</mat-error>
+            }
+        </mat-form-field>
+    </form>
+    }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="close()">
+        Cancelar
+    </button>
+    <button mat-raised-button color="primary" (click)="save()" [disabled]="!form || form.invalid"
+        [attr.aria-disabled]="!form || form.invalid">
+        {{ data ? 'Actualizar' : 'Registrar' }}
+    </button>
+</mat-dialog-actions>

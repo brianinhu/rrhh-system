@@ -1,0 +1,62 @@
+name: Backend CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'rrhh-backend/**'
+      - '.github/workflows/backend-cicd.yml'
+
+env:
+  ACR_NAME: acrrrhhripleyprod
+  CONTAINER_APP_NAME: app-backend-rrhh
+  RESOURCE_GROUP: rg-rrhh-ripley-prod
+  IMAGE_NAME: acrrrhhripleyprod.azurecr.io/rrhh-backend:${{ github.sha }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Login to Azure Container Registry
+        run: az acr login --name ${{ env.ACR_NAME }}
+
+      - name: Build and Push Docker Image
+        working-directory: ./rrhh-backend
+        run: |
+          docker build -t ${{ env.IMAGE_NAME }} .
+          docker push ${{ env.IMAGE_NAME }}
+
+      - name: Deploy to Azure Container Apps
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          resourceGroup: ${{ env.RESOURCE_GROUP }}
+          containerAppName: ${{ env.CONTAINER_APP_NAME }}
+          imageToDeploy: ${{ env.IMAGE_NAME }}
+
+      - name: Execute Smoke Test
+        run: |
+          echo "Waiting for service to stabilize (PaaS Warm-up)..."
+          sleep 60
+          
+          for i in {1..5}; do
+            STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://app-backend-rrhh.victorioussand-e9c1bf78.centralus.azurecontainerapps.io/api/actuator/health || echo "000")
+            if [ "$STATUS_CODE" -eq 200 ] || [ "$STATUS_CODE" -eq 401 ]; then
+              echo "Smoke test passed with status: $STATUS_CODE"
+              exit 0
+            fi
+            echo "Attempt $i: Service not ready yet (Status: $STATUS_CODE). Retrying in 10s..."
+            sleep 10
+          done
+          
+          echo "Smoke test failed after multiple attempts."
+          exit 1

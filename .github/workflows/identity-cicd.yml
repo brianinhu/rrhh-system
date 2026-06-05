@@ -1,0 +1,44 @@
+name: Identity CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'keycloak/**'
+      - '.github/workflows/identity-cicd.yml'
+
+env:
+  ACR_NAME: acrrrhhripleyprod
+  CONTAINER_APP_NAME: rrhh-keycloak-identity
+  RESOURCE_GROUP: rg-rrhh-ripley-prod
+  IMAGE_NAME: acrrrhhripleyprod.azurecr.io/rrhh-keycloak-identity:${{ github.sha }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Login to Azure Container Registry
+        run: az acr login --name ${{ env.ACR_NAME }}
+
+      - name: Build and Push Identity Image
+        working-directory: ./keycloak
+        run: |
+          docker build -t ${{ env.IMAGE_NAME }} .
+          docker push ${{ env.IMAGE_NAME }}
+
+      - name: Deploy to Azure Container Apps
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          resourceGroup: ${{ env.RESOURCE_GROUP }}
+          containerAppName: ${{ env.CONTAINER_APP_NAME }}
+          imageToDeploy: ${{ env.IMAGE_NAME }}

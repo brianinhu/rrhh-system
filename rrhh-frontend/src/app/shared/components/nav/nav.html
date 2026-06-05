@@ -1,0 +1,83 @@
+<mat-sidenav-container class="h-screen">
+
+    <mat-sidenav #drawer class="!w-64 border-r border-gray-100" mode="side" opened>
+        
+        <div class="h-16 flex items-center justify-center border-b border-gray-100">
+            <h2 class="text-xl font-bold text-gray-800">RRHH Ripley</h2>
+        </div>
+
+        <mat-nav-list class="px-3 mt-4">
+
+            @if (authService.userMenu().length > 0) {
+                @for (item of authService.userMenu(); track item.url) {
+                <a mat-list-item [routerLink]="item.url" routerLinkActive="active-link"
+                    class="rounded-xl mb-1 transition-all duration-200 group">
+                    <mat-icon matListItemIcon>
+                        {{ item.icono }}
+                    </mat-icon>
+                    <span matListItemTitle>
+                        {{ item.nombre }}
+                    </span>
+                </a>
+                }
+            } @else {
+                @for (i of [1,2,3,4]; track i) {
+                <div class="mx-4 my-3 h-10 bg-gray-100 animate-pulse rounded-lg"></div>
+                }
+            }
+
+            <div class="my-6 border-t border-gray-100 mx-4"></div>
+
+            <button mat-list-item (click)="authService.logout()" class="rounded-xl text-red-600 hover:bg-red-50 transition-colors">
+                <mat-icon matListItemIcon class="text-red-500">logout</mat-icon>
+                <span matListItemTitle class="font-medium">Cerrar Sesión</span>
+            </button>
+
+        </mat-nav-list>
+
+    </mat-sidenav>
+
+    <mat-sidenav-content class="bg-gray-50">
+
+        <mat-toolbar class="bg-white border-b border-gray-200 flex justify-between px-8 h-20 shadow-sm sticky top-0 z-10">
+            
+            <div class="flex items-center gap-4">
+                <button mat-icon-button (click)="drawer.toggle()" class="text-gray-500">
+                    <mat-icon>menu_open</mat-icon>
+                </button>
+                <span class="font-semibold text-gray-800 text-lg">Panel de Gestión</span>
+            </div>
+
+            <div class="flex items-center gap-4">
+                @if (authService.currentUser(); as user) {
+                <div class="text-right hidden md:block">
+                    <p class="text-sm font-bold text-gray-900 leading-none">{{ user.nombreCompleto }}</p>
+                    <p class="text-xs text-gray-500 mt-1 font-medium">{{ user.email }}</p>
+                </div>
+                <div
+                    class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white font-bold shadow-md shadow-blue-200 uppercase ring-4 ring-white">
+                    {{ user.nombreCompleto.charAt(0) }}
+                </div>
+                } @else {
+                <div class="w-11 h-11 rounded-xl bg-gray-200 animate-pulse"></div>
+                }
+            </div>
+            
+        </mat-toolbar>
+
+        <main class="p-8">
+            @if (authService.currentUser()) {
+            <div class="fade-in">
+                <router-outlet></router-outlet>
+            </div>
+            } @else {
+            <div class="flex flex-col items-center justify-center h-[60vh] text-gray-400">
+                <mat-spinner diameter="40" class="mb-4"></mat-spinner>
+                <p class="animate-pulse font-medium">Sincronizando con Ripley...</p>
+            </div>
+            }
+        </main>
+
+    </mat-sidenav-content>
+
+</mat-sidenav-container>

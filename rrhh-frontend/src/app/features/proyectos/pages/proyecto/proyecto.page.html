@@ -1,0 +1,61 @@
+<header>
+    <h1 class="text-xl">Proyectos</h1>
+</header>
+
+<main>
+    <section>
+        <button mat-flat-button type="button" (click)="abrirModal()">
+            <mat-icon>add</mat-icon>
+            <span>Nuevo Proyecto</span>
+        </button>
+    </section>
+
+    <section>
+        @if (proyectoService.proyectos().length > 0) {
+            <table mat-table [dataSource]="proyectoService.proyectos()" aria-label="Tabla de proyectos">
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef> ID </th>
+                    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nombre">
+                    <th mat-header-cell *matHeaderCellDef> Proyecto </th>
+                    <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="descripcion">
+                    <th mat-header-cell *matHeaderCellDef> Descripción </th>
+                    <td mat-cell *matCellDef="let element"> {{element.descripcion}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="estado">
+                    <th mat-header-cell *matHeaderCellDef> Estado </th>
+                    <td mat-cell *matCellDef="let element"> {{element.estado}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-icon-button type="button" (click)="verEquipo(element.id)" aria-label="Ver equipo" title="Ver Equipo">
+                            <mat-icon>group</mat-icon>
+                        </button>
+                        <button mat-icon-button type="button" (click)="abrirModal(element)" aria-label="Editar proyecto" title="Editar">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button type="button" (click)="eliminar(element.id)" aria-label="Eliminar proyecto" title="Eliminar">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+        } @else {
+            <div>
+                <p>No hay proyectos registrados en el sistema.</p>
+            </div>
+        }
+    </section>
+</main>

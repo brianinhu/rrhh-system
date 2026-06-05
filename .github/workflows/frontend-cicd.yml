@@ -1,0 +1,57 @@
+name: Frontend CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'rrhh-frontend/**'
+      - '.github/workflows/frontend-cicd.yml'
+
+env:
+  ACR_NAME: acrrrhhripleyprod
+  CONTAINER_APP_NAME: app-frontend-rrhh
+  RESOURCE_GROUP: rg-rrhh-ripley-prod
+  IMAGE_NAME: acrrrhhripleyprod.azurecr.io/rrhh-frontend:${{ github.sha }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Login to Azure Container Registry
+        run: az acr login --name ${{ env.ACR_NAME }}
+
+      - name: Build and Push Docker Image
+        working-directory: ./rrhh-frontend
+        run: |
+          docker build -t ${{ env.IMAGE_NAME }} .
+          docker push ${{ env.IMAGE_NAME }}
+
+      - name: Deploy to Azure Container Apps
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          resourceGroup: ${{ env.RESOURCE_GROUP }}
+          containerAppName: ${{ env.CONTAINER_APP_NAME }}
+          imageToDeploy: ${{ env.IMAGE_NAME }}
+      - name: Execute Frontend Smoke Test
+        run: |
+          echo "Waiting for frontend to stabilize..."
+          sleep 30
+          FRONTEND_URL="https://app-frontend-rrhh.victorioussand-e9c1bf78.centralus.azurecontainerapps.io"
+          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" $FRONTEND_URL || echo "000")
+          
+          if [ "$STATUS_CODE" -eq 200 ]; then
+            echo "Frontend smoke test passed with status: $STATUS_CODE"
+          else
+            echo "Frontend smoke test failed with status: $STATUS_CODE"
+            exit 1
+          fi

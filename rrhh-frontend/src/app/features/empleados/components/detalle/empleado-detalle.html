@@ -1,0 +1,112 @@
+@if (empleado(); as e) {
+<div class="p-0 overflow-hidden rounded-lg">
+    <div class="bg-blue-600 p-6 text-white flex justify-between items-start">
+        <div>
+            <h2 class="text-2xl font-bold m-0">{{ e.nombre }} {{ e.apellido }}</h2>
+            <p class="text-blue-100 opacity-90 flex items-center gap-1">
+                <mat-icon>badge</mat-icon> ID: {{ e.id }}
+            </p>
+        </div>
+        <button mat-icon-button mat-dialog-close class="text-white">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <mat-dialog-content class="m-0 p-6 bg-slate-50">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <div class="space-y-4">
+                <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-blue-500">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Cargo y Departamento
+                    </h4>
+                    <p class="font-bold text-slate-700 text-lg">{{ e.cargoNombre }}</p>
+                    <p class="text-sm text-slate-500">{{ e.departamentoNombre }}</p>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-emerald-500">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Sueldo</h4>
+                    <p class="font-bold text-emerald-600 text-xl">S/ {{ e.sueldo | number:'1.2-2' }}</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-amber-500">
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Nivel de estudios y
+                    especialidad
+                </h4>
+                <div class="flex items-start gap-3 mb-4">
+                    <mat-icon class="text-amber-500">school</mat-icon>
+                    <div>
+                        <p class="text-sm font-bold text-slate-700">{{ e.nivelEstudios ? e.nivelEstudios : 'No
+                            especificado' }}</p>
+                        <p class="text-xs text-slate-500">{{ e.especialidad ? e.especialidad : 'No especificado' }}</p>
+
+                        <div class="mt-2 flex items-center gap-1">
+                            @if (e.urlCurriculum) {
+                            <span
+                                class="flex items-center text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
+                                <mat-icon class="text-[12px] !size-3 mr-1">check_circle</mat-icon>
+                                PDF adjunto
+                            </span>
+                            } @else {
+                            <span
+                                class="flex items-center text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-medium">
+                                <mat-icon class="text-[12px] !size-3 mr-1">history_edu</mat-icon>
+                                Sin currículum
+                            </span>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-3 border-t border-slate-100">
+                    <p class="text-[10px] text-slate-400 italic">Registrado el: {{ e.fechaRegistro | date:'fullDate' }}
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-6 bg-white p-5 rounded-xl shadow-sm border-t-4 border-indigo-500">
+            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                <mat-icon class="text-sm h-auto w-auto">assignment</mat-icon>
+                Proyectos Asignados
+            </h4>
+
+            @if (e.nombresProyectos && e.nombresProyectos.length > 0) {
+            <mat-chip-set>
+                @for (nombre of e.nombresProyectos; track nombre) {
+                <mat-chip class="!bg-slate-100 !text-slate-700 font-medium">
+                    <mat-icon matChipAvatar class="text-indigo-500">rocket_launch</mat-icon>
+                    {{ nombre }}
+                </mat-chip>
+                }
+            </mat-chip-set>
+            } @else {
+            <div class="flex flex-col items-center py-4 border-2 border-dashed border-slate-100 rounded-lg">
+                <mat-icon class="text-slate-200 text-4xl h-10 w-10">folder_off</mat-icon>
+                <p class="text-slate-400 text-sm italic mt-2">Sin proyectos activos en este momento</p>
+            </div>
+            }
+        </div>
+
+        <div class="mt-6 p-3 bg-slate-100 rounded text-[10px] text-slate-400 font-mono">
+            Link de referencia: {{ e._links['self'].href }}
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="p-4 bg-white border-t gap-2">
+        <button mat-stroked-button mat-dialog-close class="hover:bg-slate-50">
+            Cerrar
+        </button>
+
+        <button mat-flat-button color="primary" (click)="verPdf()" class="flex items-center gap-2">
+            <mat-icon>picture_as_pdf</mat-icon>
+            Ver Currículum
+        </button>
+    </mat-dialog-actions>
+</div>
+} @else {
+<div class="flex flex-col items-center justify-center p-12">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p class="mt-4 text-slate-500 animate-pulse">Consultando información...</p>
+</div>
+}
