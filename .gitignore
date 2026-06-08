@@ -25,7 +25,6 @@ dist/
 postgres_data/
 npm_data/
 npm_letsencrypt/
-proyecto.zip
 
 # Build Outputs
 /rrhh-frontend/dist/

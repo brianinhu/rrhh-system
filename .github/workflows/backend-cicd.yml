@@ -3,7 +3,7 @@ name: Backend CI/CD Pipeline
 on:
   push:
     branches:
-      - master
+      - develop
     paths:
       - 'rrhh-backend/**'
       - '.github/workflows/backend-cicd.yml'

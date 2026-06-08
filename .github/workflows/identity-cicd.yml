@@ -3,7 +3,7 @@ name: Identity CI/CD Pipeline
 on:
   push:
     branches:
-      - master
+      - develop
     paths:
       - 'keycloak/**'
       - '.github/workflows/identity-cicd.yml'
