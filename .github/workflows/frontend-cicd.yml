@@ -3,7 +3,7 @@ name: Frontend CI/CD Pipeline
 on:
   push:
     branches:
-      - develop
+      - master
     paths:
       - 'rrhh-frontend/**'
       - '.github/workflows/frontend-cicd.yml'
