@@ -62,8 +62,8 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://${DB_HOST:-postgres-server}:5432/${DB_NAME_CORE:-rrhh_core_db}
       - SPRING_DATASOURCE_USERNAME=${DB_USER:-postgres}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-postgres}
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=${KEYCLOAK_URL:-http://localhost:8180}/auth/realms/${KEYCLOAK_REALM:-rrhh-core}
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://keycloak:8080/auth/realms/${KEYCLOAK_REALM:-rrhh-core}/protocol/openid-connect/certs
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=${KEYCLOAK_URL:-http://localhost:8180}/realms/${KEYCLOAK_REALM:-rrhh-core}
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://keycloak:8080/realms/${KEYCLOAK_REALM:-rrhh-core}/protocol/openid-connect/certs
       # Explicitly injection 
       - FRONTEND_URL=${FRONTEND_URL}
       - KEYCLOAK_URL=${KEYCLOAK_URL}
