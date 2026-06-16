@@ -67,6 +67,7 @@ services:
       # Explicitly injection 
       - FRONTEND_URL=${FRONTEND_URL}
       - KEYCLOAK_URL=${KEYCLOAK_URL}
+      - KEYCLOAK_ADMIN_SERVER_URL=${KEYCLOAK_ADMIN_SERVER_URL:-http://keycloak:8080}
       - KEYCLOAK_REALM=${KEYCLOAK_REALM}
       - KEYCLOAK_ADMIN_REALM=master
       - KEYCLOAK_ADMIN_CLIENT_ID=admin-cli
