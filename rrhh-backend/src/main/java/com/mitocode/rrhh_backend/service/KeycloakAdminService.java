@@ -12,10 +12,8 @@ import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -31,13 +29,7 @@ public class KeycloakAdminService {
         RealmResource realmResource = keycloakAdmin.realm(properties.getRealm());
         UsersResource usersResource = realmResource.users();
 
-        // 1) Crear credencial
-        CredentialRepresentation credencial = new CredentialRepresentation();
-        credencial.setTemporary(false);
-        credencial.setType(CredentialRepresentation.PASSWORD);
-        credencial.setValue(password);
-
-        // 2) Crear usuario
+        // 1) Crear usuario limpio (sin lista de credenciales)
         UserRepresentation usuario = new UserRepresentation();
         usuario.setEmail(email);
         usuario.setUsername(email);
@@ -45,22 +37,35 @@ public class KeycloakAdminService {
         usuario.setLastName(apellido);
         usuario.setEnabled(true);
         usuario.setEmailVerified(true);
-        usuario.setCredentials(Collections.singletonList(credencial));
 
-        // 3) Guardar usuario en Keycloak
+        // 2) Guardar usuario en Keycloak
         try (Response response = usersResource.create(usuario)) {
             int status = response.getStatus();
 
             if (status == 201) {
-                // Extraemos el UUID de la cabecera 'Location'
                 String userId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
                 log.info("[Keycloak] Usuario creado con UUID: {}", userId);
 
+                // 3) Establecer la contraseña de forma aislada para evitar el bug de Jackson
+                try {
+                    CredentialRepresentation credencial = new CredentialRepresentation();
+                    credencial.setTemporary(false);
+                    credencial.setType(CredentialRepresentation.PASSWORD);
+                    credencial.setValue(password);
+                    
+                    realmResource.users().get(userId).resetPassword(credencial);
+                    log.info("[Keycloak] Contraseña establecida con éxito para el usuario: {}", userId);
+                } catch (Exception e) {
+                    log.error("[Keycloak] Error asignando contraseña al usuario {}: {}", userId, e.getMessage());
+                }
+
+                // 4) Asignar Roles
                 try {
                     asignarRoles(realmResource, userId, roles);
                 } catch (Exception e) {
                     log.error("[Keycloak] Error crítico asignando roles al usuario {}: {}", userId, e.getMessage());
                 }
+
                 return userId;
             } else {
                 String errorMsg = response.readEntity(String.class);
