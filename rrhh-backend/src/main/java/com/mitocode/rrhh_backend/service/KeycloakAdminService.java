@@ -56,7 +56,7 @@ public class KeycloakAdminService {
                     realmResource.users().get(userId).resetPassword(credencial);
                     log.info("[Keycloak] Contraseña establecida con éxito para el usuario: {}", userId);
                 } catch (jakarta.ws.rs.WebApplicationException e) {
-                    // Esto nos dirá exactamente qué campo o propiedad está rechazando Keycloak 26
+                    // Log detallado
                     String errorBody = e.getResponse().readEntity(String.class);
                     log.error("[Keycloak] Error detallado asignando contraseña al usuario {}: Status {}, Body: {}",
                             userId, e.getResponse().getStatus(), errorBody);

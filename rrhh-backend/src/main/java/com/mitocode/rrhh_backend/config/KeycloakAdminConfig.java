@@ -22,9 +22,6 @@ public class KeycloakAdminConfig {
                 .grantType(OAuth2Constants.PASSWORD)
                 .username(properties.getUsername())
                 .password(properties.getPassword())
-                .resteasyClient(new org.jboss.resteasy.client.jaxrs.internal.ResteasyClientBuilderImpl()
-                        .connectionPoolSize(10)
-                        .build())
                 .build();
     }
 }
