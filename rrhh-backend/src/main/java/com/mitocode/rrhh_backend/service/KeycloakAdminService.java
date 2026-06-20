@@ -52,11 +52,17 @@ public class KeycloakAdminService {
                     credencial.setTemporary(false);
                     credencial.setType(CredentialRepresentation.PASSWORD);
                     credencial.setValue(password);
-                    
+
                     realmResource.users().get(userId).resetPassword(credencial);
                     log.info("[Keycloak] Contraseña establecida con éxito para el usuario: {}", userId);
+                } catch (jakarta.ws.rs.WebApplicationException e) {
+                    // Esto nos dirá exactamente qué campo o propiedad está rechazando Keycloak 26
+                    String errorBody = e.getResponse().readEntity(String.class);
+                    log.error("[Keycloak] Error detallado asignando contraseña al usuario {}: Status {}, Body: {}",
+                            userId, e.getResponse().getStatus(), errorBody);
                 } catch (Exception e) {
-                    log.error("[Keycloak] Error asignando contraseña al usuario {}: {}", userId, e.getMessage());
+                    log.error("[Keycloak] Error genérico asignando contraseña al usuario {}: {}", userId,
+                            e.getMessage());
                 }
 
                 // 4) Asignar Roles
@@ -95,7 +101,8 @@ public class KeycloakAdminService {
     }
 
     private void asignarRoles(RealmResource realmResource, String userId, Set<String> roles) {
-        if (roles == null || roles.isEmpty()) return;
+        if (roles == null || roles.isEmpty())
+            return;
 
         List<RoleRepresentation> rolesList = roles.stream()
                 .map(rol -> {
