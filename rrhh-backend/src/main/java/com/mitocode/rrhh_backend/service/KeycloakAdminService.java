@@ -26,7 +26,7 @@ public class KeycloakAdminService {
     private final KeycloakAdminProperties properties;
 
     public String crearUsuario(String email, String password, Set<String> roles, String nombre, String apellido) {
-        RealmResource realmResource = keycloakAdmin.realm(properties.getRealm());
+        RealmResource realmResource = keycloakAdmin.realm(properties.getAppRealm());
         UsersResource usersResource = realmResource.users();
 
         // 1) Crear usuario limpio (sin lista de credenciales)
@@ -85,7 +85,7 @@ public class KeycloakAdminService {
     }
 
     public void actualizarEstado(String keycloakId, boolean enabled) {
-        UserResource userResource = keycloakAdmin.realm(properties.getRealm()).users().get(keycloakId);
+        UserResource userResource = keycloakAdmin.realm(properties.getAppRealm()).users().get(keycloakId);
 
         // Obtenemos la representación actual para no perder otros datos
         UserRepresentation usuario = userResource.toRepresentation();
@@ -96,7 +96,7 @@ public class KeycloakAdminService {
     }
 
     public void eliminarUsuario(String keycloakId) {
-        keycloakAdmin.realm(properties.getRealm()).users().get(keycloakId).remove();
+        keycloakAdmin.realm(properties.getAppRealm()).users().get(keycloakId).remove();
         log.info("[Keycloak] Usuario con ID {} eliminado", keycloakId);
     }
 
