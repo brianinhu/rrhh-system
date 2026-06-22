@@ -57,27 +57,30 @@ services:
     ports:
       - "8080:8080"
     env_file:
-      - .env
+      - path: .env
+        required: false
+
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://${DB_HOST:-postgres-server}:5432/${DB_NAME_CORE:-rrhh_core_db}
       - SPRING_DATASOURCE_USERNAME=${DB_USER:-postgres}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-postgres}
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=${KEYCLOAK_URL:-http://localhost:8180}/realms/${KEYCLOAK_REALM:-rrhh-core}
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://keycloak:8080/realms/${KEYCLOAK_REALM:-rrhh-core}/protocol/openid-connect/certs
+      - JPA_DDL_AUTO=${JPA_DDL_AUTO:-validate}
       # Explicitly injection 
-      - FRONTEND_URL=${FRONTEND_URL}
-      - KEYCLOAK_URL=${KEYCLOAK_URL}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:4200}
+      - KEYCLOAK_URL=${KEYCLOAK_URL:-http://localhost:8180}
       - KEYCLOAK_ADMIN_SERVER_URL=${KEYCLOAK_ADMIN_SERVER_URL:-http://keycloak:8080}
-      - KEYCLOAK_REALM=${KEYCLOAK_REALM}
+      - KEYCLOAK_REALM=${KEYCLOAK_REALM:-rrhh-core}
       - KEYCLOAK_ADMIN_REALM=master
       - KEYCLOAK_ADMIN_CLIENT_ID=admin-cli
-      - KEYCLOAK_ADMIN_USER=${KEYCLOAK_ADMIN_USER}
-      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+      - KEYCLOAK_ADMIN_USER=${KEYCLOAK_ADMIN_USER:-admin}
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD:-admin}
       # - KEYCLOAK_CLIENT_SECRET=${KEYCLOAK_CLIENT_SECRET}
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_REGION=${AWS_REGION}
-      - AWS_S3_BUCKET=${AWS_S3_BUCKET}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-default}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-default}
+      - AWS_REGION=${AWS_REGION:-default}
+      - AWS_S3_BUCKET=${AWS_S3_BUCKET:-default}
     depends_on:
       postgres-server:
         condition: service_healthy

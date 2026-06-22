@@ -55,20 +55,17 @@ public class KeycloakAdminService {
 
                     realmResource.users().get(userId).resetPassword(credencial);
                     log.info("[Keycloak] Contraseña establecida con éxito para el usuario: {}", userId);
-                } catch (jakarta.ws.rs.WebApplicationException e) {
+                } catch (WebApplicationException e) {
                     // Log detallado
                     String errorBody = e.getResponse().readEntity(String.class);
                     log.error("[Keycloak] Error detallado asignando contraseña al usuario {}: Status {}, Body: {}",
                             userId, e.getResponse().getStatus(), errorBody);
-                } catch (Exception e) {
-                    log.error("[Keycloak] Error genérico asignando contraseña al usuario {}: {}", userId,
-                            e.getMessage());
                 }
 
                 // 4) Asignar Roles
                 try {
                     asignarRoles(realmResource, userId, roles);
-                } catch (Exception e) {
+                } catch (WebApplicationException e) {
                     log.error("[Keycloak] Error crítico asignando roles al usuario {}: {}", userId, e.getMessage());
                 }
 
