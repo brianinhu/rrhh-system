@@ -16,8 +16,8 @@ services:
     networks:
       - rrhh-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
-      interval: 10s
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME_CORE:-rrhh_core_db}"]
+      interval: 5s
       timeout: 5s
       retries: 5
 
