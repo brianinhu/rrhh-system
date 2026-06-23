@@ -139,26 +139,48 @@ INSERT INTO departamentos (nombre, descripcion) VALUES
 ('Seguridad y Cumplimiento', 'Infraestructura, ciberseguridad y marco legal');
 
 INSERT INTO proyectos (nombre, descripcion, estado) VALUES
-('Portal Auto-gestión Ripley', 'Plataforma para que los empleados gestionen sus boletas y vacaciones', 'EN_PROGRESO'),
-('Core E-commerce 2.0', 'Migración de la plataforma principal de ventas en línea', 'EN_PROGRESO'),
+('Portal Auto-gestión Ripley', 'Plataforma para que los empleados gestionen sus boletas y vacaciones', 'ACTIVO'),
+('Core E-commerce 2.0', 'Migración de la plataforma principal de ventas en línea', 'ACTIVO'),
 ('App Ripley Express', 'Desarrollo móvil para envíos rápidos y tracking de pedidos', 'PLANIFICACION'),
-('Sistema RRHH Core', 'Software interno de gestión de talento y asignaciones', 'EN_PROGRESO'),
+('Sistema RRHH Core', 'Software interno de gestión de talento y asignaciones', 'ACTIVO'),
 ('Data Warehouse Corporativo', 'Centralización de datos para analítica de negocio masiva', 'PLANIFICACION'),
-('Algoritmo de Crédito Tarjeta Ripley', 'Optimización del motor de riesgo financiero en tiempo real', 'EN_PROGRESO'),
-('Migración Cloud AWS 2026', 'Traspaso de servidores locales hacia infraestructura en la nube', 'EN_PROGRESO'),
-('Automatización de Almacenes Lurín', 'Software para guiado de robots y stock automatizado', 'FINALIZADO'),
+('Algoritmo de Crédito Tarjeta Ripley', 'Optimización del motor de riesgo financiero en tiempo real', 'PAUSADO'),
+('Migración Cloud AWS 2026', 'Traspaso de servidores locales hacia infraestructura en la nube', 'FINALIZADO'),
+('Automatización de Almacenes Lurín', 'Software para guiado de robots y stock automatizado', 'PAUSADO'),
 ('Plataforma Omni-canalidad', 'Integración de atención en tiendas físicas, web y WhatsApp', 'PLANIFICACION'),
-('Pasarela de Pagos RipleyPay', 'Iniciativa de billetera digital integrada para retail', 'EN_PROGRESO'),
-('Ripley Puntos Go', 'Renovación del sistema de fidelización de clientes', 'FINALIZADO'),
-('Ciberseguridad Zero Trust', 'Implementación de seguridad estricta en accesos internos corporativos', 'EN_PROGRESO'),
-('Célula Arquitectura Angular 21', 'Estandarización de componentes frontend para la empresa', 'EN_PROGRESO'),
-('Modernización Microservicios Spring Boot', 'Desacoplamiento del antiguo sistema monolítico', 'EN_PROGRESO'),
-('IA Asistente Servicio al Cliente', 'Implementación de inteligencia artificial conversacional para soporte', 'PLANIFICACION');
+('Pasarela de Pagos RipleyPay', 'Iniciativa de billetera digital integrada para retail', 'FINALIZADO'),
+('Ripley Puntos Go', 'Renovación del sistema de fidelización de clientes', 'PAUSADO'),
+('Ciberseguridad Zero Trust', 'Implementación de seguridad estricta en accesos internos corporativos', 'ACTIVO'),
+('Célula Arquitectura Angular 21', 'Estandarización de componentes frontend para la empresa', 'ACTIVO'),
+('Modernización Microservicios Spring Boot', 'Desacoplamiento del antiguo sistema monolítico', 'ACTIVO'),
+('IA Asistente Servicio al Cliente', 'Implementación de inteligencia artificial conversacional para soporte', 'FINALIZADO');
 
 TRUNCATE TABLE empleado_proyecto CASCADE;
 TRUNCATE TABLE usuarios CASCADE;
 TRUNCATE TABLE empleados RESTART IDENTITY CASCADE;
 TRUNCATE TABLE curriculums RESTART IDENTITY CASCADE;
+
+INSERT INTO curriculums (nivel_estudios, especialidad, url_archivo) VALUES
+('Licenciatura', 'Ingeniería de Sistemas', 'default'),
+('Maestría', 'Ciencias de la Computación', 'cv_carlos_mendoza.pdf'),
+('Licenciatura', 'Ingeniería de Software', 'cv_ana_gomez.pdf'),
+('Certificación', 'Scrum Alliance / Agile', 'cv_luis_torres.pdf'),
+('Licenciatura', 'Diseño de Experiencia de Usuario', 'cv_sofia_castro.pdf'),
+('Maestría', 'Administración de Empresas (MBA)', 'cv_jorge_ramirez.pdf'),
+('Doctorado', 'Inteligencia Artificial y Big Data', 'cv_elena_paz.pdf'),
+('Licenciatura', 'Psicología Organizacional', 'cv_ricardo_diaz.pdf'),
+('Certificación', 'AWS Certified Solutions Architect', 'cv_marina_vega.pdf'),
+('Licenciatura', 'Ingeniería de Sistemas', 'cv_pedro_soto.pdf'),
+('Licenciatura', 'Marketing Digital', 'cv_lucia_martinez.pdf'),
+('Maestría', 'Gestión del Talento Humano', 'cv_andrea_ruiz.pdf'),
+('Licenciatura', 'Economía y Finanzas', 'cv_miguel_angel.pdf'),
+('Certificación', 'ISTQB Advanced Test Automation', 'cv_gabriela_lopez.pdf'),
+('Licenciatura', 'Ciencias de la Computación', 'cv_fernando_alonso.pdf'),
+('Licenciatura', 'Ingeniería de Sistemas', 'cv_patricia_silva.pdf'),
+('Maestría', 'Ciberseguridad y Redes', 'cv_roberto_guillen.pdf'),
+('Licenciatura', 'Administración de Negocios', 'cv_claudia_morales.pdf'),
+('Licenciatura', 'Diseño Gráfico Publicitario', 'cv_hugo_beltran.pdf'),   
+('Licenciatura', 'Estadística e Informática', 'cv_valeria_rios.pdf');
 
 -- Empleados
 INSERT INTO empleados (nombre, apellido, id_cargo, id_departamento, id_curriculum, sueldo, estado, created_by) VALUES 
