@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "keycloak.admin")
 public class KeycloakAdminProperties {
     private String serverUrl;
-    private String realm;
+    private String appRealm;
     private String adminRealm;
     private String adminClientId;
     private String username;
