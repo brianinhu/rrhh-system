@@ -1,4 +1,4 @@
-# RRHH System — Gestión centralizada de talento y proyectos
+# Sistema de Gestión Centralizada de Colaboradores y Proyectos
 
 Plataforma web para equipos de Recursos Humanos, que centraliza la gestión del personal, los expedientes y la asignación de colaboradores a proyectos, con información ejecutiva para apoyar decisiones organizacionales.
 
