@@ -1,6 +1,6 @@
-# RRHH System
+# RRHH System — Gestión centralizada de talento y proyectos
 
-Sistema integral de recursos humanos que permite administrar empleados, proyectos, usuarios, estructura organizacional y indicadores del personal desde una sola plataforma web.
+Plataforma web para equipos de Recursos Humanos, que centraliza la gestión del personal, los expedientes y la asignación de colaboradores a proyectos, con información ejecutiva para apoyar decisiones organizacionales.
 
 ## Stack tecnológico
 
@@ -13,11 +13,11 @@ Sistema integral de recursos humanos que permite administrar empleados, proyecto
 
 ## Características principales
 
-- Gestión completa de empleados, con búsqueda, paginación, estados y asignación a proyectos.
-- Administración de proyectos y equipos con permisos por rol.
-- Dashboard ejecutivo con métricas, gráficos y nómina total.
-- Gestión de usuarios, roles, departamentos, cargos y estructura organizacional.
-- Acceso seguro mediante Keycloak, autenticación OAuth2 y control de rutas por roles.
+- Identidad y autorización centralizadas: provisión de usuarios en Keycloak, asignación de roles, activación y baja sincronizadas, autenticación JWT y menús dinámicos por permisos.
+- CRUD paginado de empleados con búsqueda por término, detalle enriquecido y datos laborales como cargo, departamento y estudios.
+- Gestión de proyectos y equipos con estados configurables y sincronización muchos a muchos de las asignaciones entre empleados y proyectos.
+- Dashboard ejecutivo basado en consultas agregadas: nómina activa, distribución por departamento y cargo, estados de proyectos y principales sueldos.
+- Expedientes con currículos almacenados en AWS S3, enlaces temporales firmados y limpieza del archivo al reemplazarlo o eliminar al empleado.
 
 ## Instalación rápida
 
@@ -29,4 +29,6 @@ cd rrhh-system
 docker compose up --build -d
 ```
 
-Abre la aplicación en [http://localhost:4200](http://localhost:4200). Los servicios adicionales quedan disponibles en Keycloak (`http://localhost:8180`) y el backend (`http://localhost:8080/api`).
+Abre la aplicación en [http://localhost:4200](http://localhost:4200). 
+
+Los servicios adicionales quedan disponibles en Keycloak (`http://localhost:8180`) y el backend (`http://localhost:8080/api`).
